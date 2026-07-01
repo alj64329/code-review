@@ -3,13 +3,32 @@
 @theme {
   --font-sans: var(--font-inter-sans);
   --font-mono: var(--font-source-code-pro);
+  --color-white-8: rgba(255, 255, 255, 0.08);
   --color-white-30: rgba(255, 255, 255, 0.3);
   --color-white-10: rgba(255, 255, 255, 0.1);
   --color-white-40: rgba(255, 255, 255, 0.4);
+  --color-white-60: rgba(255, 255, 255, 0.6);
+  --color-purple-15: rgba(123, 97, 255, 0.15);
+  --color-purple-40: rgba(123, 97, 255, 0.4);
+  --color-purple-20: rgba(123, 97, 255, 0.2);
+  --color-purple-full: #a78fff;
 }
 
 body {
   background: #0d0f14;
   color: #fff;
   font-family: var(--font-inter-sans);
+}
+
+@layer utilities {
+  .file-toggle-btn {
+    @apply py-2 px-6 text-white-30 cursor-pointer;
+  }
+  .file-toggle-btn-on {
+    @apply text-[#A78FFF] bg-purple-20 border-purple-40 rounded-md;
+  }
+
+  .lang-btn {
+    @apply text-[#4ECBA6] bg-[rgba(78,208,166,0.12)] border-[0.5] border-[rgba(78,203,166,0.25)] rounded-3xl py-[0.5] px-3;
+  }
 }

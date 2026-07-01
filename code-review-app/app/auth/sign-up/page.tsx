@@ -1,5 +1,4 @@
 import SignUpComponent from "@/components/SignUp.component";
-import React from "react";
 import { IconType } from "react-icons";
 import { GiDiamonds } from "react-icons/gi";
 import { IoBugOutline } from "react-icons/io5";
