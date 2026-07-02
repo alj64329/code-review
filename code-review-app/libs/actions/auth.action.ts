@@ -1,7 +1,7 @@
 "use server";
 
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { supabase } from "../supabase";
 
 export const login = async ({
   email,
@@ -10,6 +10,7 @@ export const login = async ({
   email: string;
   password: string;
 }) => {
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -29,19 +30,22 @@ export const signUp = async ({
   email: string;
   password: string;
 }) => {
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
   });
 
   if (error) {
-    throw new Error("Error signing up:", error);
+    throw new Error(`Error signing up: ${error.message}`);
   }
+  console.log("returning data", data);
 
   return data;
 };
 
 export const logout = async () => {
+  const supabase = await createClient();
   const { error } = await supabase.auth.signOut();
 
   if (error) {
@@ -50,6 +54,7 @@ export const logout = async () => {
 };
 
 export const googleOAuth = async () => {
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
   });
