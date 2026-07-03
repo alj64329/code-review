@@ -16,10 +16,13 @@ export const login = async ({
     password,
   });
 
-  if (error) {
-    throw new Error("Error logging in:", error);
-  }
+  console.log("data", data);
+  console.log("error", error);
 
+  if (error) {
+    console.log("Error logging in:", error);
+    return error;
+  }
   return data;
 };
 
@@ -58,6 +61,7 @@ export const googleOAuth = async () => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
   });
+  console.log("data", data);
 
   if (data.url) {
     redirect(data.url);

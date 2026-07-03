@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   SubmitEvent,
   SubmitEventHandler,
+  useEffect,
   useState,
 } from "react";
 import { LuEye, LuEyeClosed } from "react-icons/lu";
@@ -20,23 +21,27 @@ const SignUpComponent = () => {
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await signUp(signUpForm);
-  };
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const target = e.currentTarget;
-    const name = target.name;
-    console.log(e);
-
-    if (name === "password" && target.value.length < 6) {
+    if (signUpForm.password.length < 6) {
       setErrorMsg("Password needs to be more than 6");
       return;
     }
 
+    await signUp(signUpForm);
+  };
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
     setSignUpForm((prev) => ({
-      email: name === "email" ? target.value : prev.email,
-      password: name === "password" ? target.value : prev.password,
+      ...prev,
+      [name]: value,
     }));
   };
+
+  useEffect(() => {
+    if (signUpForm.password.length > 6) {
+      setErrorMsg("");
+    }
+  }, [signUpForm]);
 
   return (
     <div>

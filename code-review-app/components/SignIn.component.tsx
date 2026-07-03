@@ -1,10 +1,12 @@
 "use client";
 import { LuEyeClosed, LuEye } from "react-icons/lu";
 import Link from "next/link";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, SubmitEvent, useState } from "react";
+import { googleOAuth, login } from "@/libs/actions/auth.action";
 
 const SignInComponent = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const [signInForm, setSignInForm] = useState<{
     email: string;
     password: string;
@@ -13,8 +15,10 @@ const SignInComponent = () => {
     password: "",
   });
 
-  const handleChange = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target);
     const { name, value } = e.target;
+    console.log(name, value);
 
     setSignInForm((prev) => ({
       ...prev,
@@ -22,11 +26,24 @@ const SignInComponent = () => {
     }));
   };
 
-  const handleSubmit = async (e: SubmitEvent) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!signInForm.email || !signInForm.password) {
+      return;
+    }
+    const res = await login(signInForm);
+    console.log("res", res);
+
+    if (!res) {
+      console.log("Error logging in");
+      return;
+    }
   };
 
-  const handleGoogleAuth = async () => {};
+  const handleGoogleAuth = async () => {
+    await googleOAuth();
+  };
   return (
     <div className="h-[70vh]">
       <div>
@@ -38,7 +55,7 @@ const SignInComponent = () => {
           </div>
         </div>
 
-        <form onSubmit={() => handleSubmit} className="flex flex-col py-16">
+        <form onSubmit={handleSubmit} className="flex flex-col py-16">
           <div className="flex flex-col gap-2">
             <label className="font-medium text-white-30 text-[13px]">
               Email
@@ -49,7 +66,7 @@ const SignInComponent = () => {
               placeholder="you@example.com"
               value={signInForm.email}
               className="text-white-30 border focus:outline-0 border-white-10 px-4 py-2 rounded-lg bg-[#111318]"
-              onChange={() => handleChange}
+              onChange={handleChange}
             />
           </div>
           <div className="flex flex-col gap-2 py-6">
@@ -60,9 +77,10 @@ const SignInComponent = () => {
               <input
                 type={isVisible ? "text" : "password"}
                 className="flex-1 focus:outline-0"
-                placeholder="**********"
+                placeholder="********"
+                name="password"
                 value={signInForm.password}
-                onChange={() => handleChange}
+                onChange={handleChange}
               />
               {isVisible ? (
                 <LuEyeClosed
@@ -88,8 +106,8 @@ const SignInComponent = () => {
             or continue with
           </div>
           <button
-            className="text-white-30 border border-white-10 px-4 py-2 rounded-lg bg-[#111318]"
-            onClick={() => handleGoogleAuth()}
+            className="text-white-30 border border-white-10 px-4 py-2 rounded-lg bg-[#111318] cursor-pointer"
+            onClick={handleGoogleAuth}
           >
             Continue with Google
           </button>
